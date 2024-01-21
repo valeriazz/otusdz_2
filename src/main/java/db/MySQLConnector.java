@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.Map;
 
 public class MySQLConnector implements IDBConnector{
+    // Singletone
     private static Connection connection = null;
     private static Statement statement = null;
 
@@ -17,7 +18,7 @@ public class MySQLConnector implements IDBConnector{
     private void connect() {
         ISettings reader = new PropertiesReader();
         Map<String, String> settings = reader.read();
-        if (connection == null){
+        if (connection == null) {
             try {
                 connection = DriverManager
                         .getConnection(settings.get("url") + "/" + settings.get("db_name"),
@@ -53,7 +54,7 @@ public class MySQLConnector implements IDBConnector{
         return null;
     }
 
-    public void close() {
+    public static void close() {
         if (statement != null) {
             try {
                 statement.close();

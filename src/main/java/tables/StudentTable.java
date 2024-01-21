@@ -18,7 +18,7 @@ public class StudentTable extends AbsTable {
         columns = new HashMap<>();
         columns.put("id", "bigint PRIMARY KEY AUTO_INCREMENT");
         columns.put("fio", "varchar(50)");
-        columns.put("sex", "varchar(50)");
+        columns.put("sex", "varchar(15)");
         columns.put("id_group", "bigint");
         create();
     }
@@ -36,7 +36,6 @@ public class StudentTable extends AbsTable {
 
     private ArrayList<Student> selectByQuery(String sqlQuery) {
         ArrayList<Student> students = new ArrayList<>();
-        db = new MySQLConnector();
         //Сделать запрос на выборку
         ResultSet rs = db.executeRequestWithAnswer(sqlQuery);
         try {
@@ -52,42 +51,44 @@ public class StudentTable extends AbsTable {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            db.close();
         }
         return students;
+    }
+
+    public void select(String[] columns, String[] where) {
+
+        String columnStr = "*";
+        if (columns.length > 0) {
+            columnStr = String.join(",", columns);
+        }
+
+        String sqlQuery = String.format("SELECT %s FROM students", columnStr);
     }
 
     //update
     public void insert(Student student) {
         //Подключиться к БД
-        db = new MySQLConnector();
         //Сделать запрос на добавление
         final String sqlQuery = String.format("INSERT INTO %s (fio, sex, id_group) VALUES ('%s', '%s', '%d')",
                 tableName, student.getFio(), student.getSex(), student.getId_group());
         db.executeRequest(sqlQuery);
-        db.close();
     }
 
     public void update(Student student) {
         //Подключиться к БД
-        db = new MySQLConnector();
         //Сделать запрос на изменение
         final String sqlQuery = String.format("UPDATE %s SET fio= '%s', sex= '%s', id_group= '%d' WHERE id= '%d'",
                 tableName, student.getFio(), student.getSex(), student.getId_group(), student.getId());
         db.executeRequest(sqlQuery);
-        db.close();
-    }
+     }
 
-    //delete
+   //delete
     public void delete(long id) {
         //Подключиться к БД
-        db = new MySQLConnector();
         //Сделать запрос на удаление
         final String sqlQuery = String.format("DELETE FROM %s WHERE id= '%d'",
                 tableName, id);
         db.executeRequest(sqlQuery);
-        db.close();
     }
 }
 

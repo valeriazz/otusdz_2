@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 public abstract class AbsTable {
     protected String tableName;
     protected Map<String, String> columns;
-    IDBConnector db;
+
+    protected IDBConnector db = new MySQLConnector();
 
     public AbsTable(String tableName) {
         this.tableName = tableName;
@@ -22,7 +23,6 @@ public abstract class AbsTable {
         String sqlRequest = String.format("CREATE TABLE IF NOT EXISTS %s (%s)", this.tableName, convertMapColumnsToString());
         db = new MySQLConnector();
         db.executeRequest(sqlRequest);
-        db.close();
     }
 
     private String convertMapColumnsToString() {
@@ -48,8 +48,6 @@ public abstract class AbsTable {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            db.close();
         }
     }
 }
