@@ -1,6 +1,6 @@
 import db.MySQLConnector;
 import objects.Student;
-import objects.Group;
+//import objects.Group;
 import objects.Curator;
 import tables.StudentTable;
 import tables.GroupTable;
