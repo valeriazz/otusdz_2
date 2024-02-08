@@ -31,6 +31,7 @@ public class GroupTable extends AbsTable {
 
     private ArrayList<Group> selectByQuery(String sqlQuery) {
         ArrayList<Group> groups = new ArrayList<>();
+        db = new MySQLConnector();
         //Сделать запрос на выборку
         ResultSet rs = db.executeRequestWithAnswer(sqlQuery);
         try {
@@ -49,47 +50,36 @@ public class GroupTable extends AbsTable {
         return groups;
     }
 
-    public void select(String[] columns, String[] where) {
-
-        String columnStr = "*";
-        if (columns.length > 0) {
-            columnStr = String.join(",", columns);
-        }
-
-        String sqlQuery = String.format("SELECT %s FROM groups", columnStr);
-    }
-
     //update
     public void insert(Group group) {
         //Подключиться к БД
+        db = new MySQLConnector();
         //Сделать запрос на добавление
-        final String sqlQuery = String.format("INSERT INTO %s (name, id_curator VALUES ('%s', '%d')",
+        String sqlQuery = String.format("INSERT INTO %s (name, id_curator VALUES ('%s', '%d')",
                 tableName, group.getName(), group.getId_curator());
         db.executeRequest(sqlQuery);
     }
 
-    public void update(Group group) {
+    public void updateByCuratorId(Group group) {
         //Подключиться к БД
+        db = new MySQLConnector();
         //Сделать запрос на изменение
-        final String sqlQuery = String.format("UPDATE %s SET name= '%s', id_curator= '%d' WHERE id= '%d'",
-                tableName, group.getName(), group.getId_curator());
+        final String sqlQuery = String.format("UPDATE %s SET id_curator= '%d' WHERE id= '%d'",
+                tableName, group.getId_curator(), group.getId());
         db.executeRequest(sqlQuery);
     }
 
-    //delete
-    public void delete(long id) {
-        //Подключиться к БД
-        //Сделать запрос на удаление
-        final String sqlQuery = String.format("DELETE FROM %s WHERE id= '%d'",
-                tableName, id);
-        db.executeRequest(sqlQuery);
-    }
-
-    public void updateByCuratorId(long id_curator) {
-        //Подключиться к БД
-        //Сделать запрос на изменение
-        final String sqlQuery = String.format("UPDATE %s SET curator= '%s'",
-                tableName, id_curator);
-        db.executeRequest(sqlQuery);
+    public void selectAllGroupsAndCurators() throws SQLException {
+        db = new MySQLConnector();
+        String sqlRequest = String.format("SELECT groups.id, groups.name, groups.id_curator, curators.fio " +
+                "FROM groups LEFT JOIN curators ON groups.id_curator = curators.id");
+        ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
+        while (rs.next()) {
+            System.out.println("Список групп с их кураторами: " +
+                    rs.getString(1) + "|" +
+                    rs.getString(2) + "|" +
+                    rs.getString(3) + "|" +
+                    rs.getString(4));
+        }
     }
 }

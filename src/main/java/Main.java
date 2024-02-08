@@ -1,19 +1,20 @@
 import db.MySQLConnector;
 import objects.Student;
-//import objects.Group;
+import objects.Group;
 import objects.Curator;
 import tables.StudentTable;
 import tables.GroupTable;
 import tables.CuratorTable;
 
+import java.sql.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
-
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
         try {
-
 
             StudentTable studentTable = new StudentTable();
             ArrayList<Student> students = studentTable.selectAll();
@@ -36,32 +37,53 @@ public class Main {
                 students = studentTable.selectAll();
             }
 
-            for (Student tmp : students) {
-                System.out.println(tmp.toString());
-                System.out.println("--------------------------------------");
+            GroupTable groupTable = new GroupTable();
+            ArrayList<Group> groups = groupTable.selectAll();
+            if (groups.size() < 3) {
+                groupTable.insert(new Group("OtusFirst", 1));
+                groupTable.insert(new Group("OtusSecond", 2));
+                groupTable.insert(new Group("OtusThird", 3));
+                groups = groupTable.selectAll();
             }
 
-            studentTable.select(new String[]{"fio"}, new String[]{});
+            CuratorTable curatorTable = new CuratorTable();
+            ArrayList<Curator> curators = curatorTable.selectAll();
+            if (curators.size() < 4) {
+                curatorTable.insert(new Curator("Сидоренко Агафья Ивановна"));
+                curatorTable.insert(new Curator("Тишко Эдуард Павлович"));
+                curatorTable.insert(new Curator("Дуденко Катерина Ивановна"));
+                curatorTable.insert(new Curator("Григорьев Александр Алексанрович"));
+                curators = curatorTable.selectAll();
+            }
 
-//        students.get(0).setFio("Кря");
-//        studentTable.update(students.get(0));
-//
-//        students = studentTable.selectAll();
-//
-//        for (Student tmp : students) {
-//            System.out.println(tmp.toString());
-//            System.out.println("--------------------------------------");
-//        }
-//
-//        studentTable.delete(17);
-//
-//        for (Student tmp : students) {
-//            System.out.println(tmp.toString());
-//            System.out.println("--------------------------------------");
-//        }
+            studentTable.selectAllStudentsWithGroupNameAndCuratorName();
+            System.out.println("--------------------------------------");
 
+            studentTable.selectStudentsNumber();
+            System.out.println("--------------------------------------");
+
+            studentTable.selectBySex("женский");
+            System.out.println("--------------------------------------");
+
+            groups.get(2).setId_curator(3);
+            groupTable.updateByCuratorId(groups.get(2));
+
+            groupTable.selectAllGroupsAndCurators();
+            System.out.println("--------------------------------------");
+
+            studentTable.selectAllStudentsFromOneGroup();
+            System.out.println("--------------------------------------");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally {
             MySQLConnector.close();
         }
     }
 }
+
+
+//            for (Student tmp : students) {
+//                System.out.println(tmp.toString());
+//                System.out.println("--------------------------------------");
+//            }

@@ -46,39 +46,12 @@ public class CuratorTable extends AbsTable {
         return curators;
     }
 
-    public void select(String[] columns, String[] where) {
-
-        String columnStr = "*";
-        if (columns.length > 0) {
-            columnStr = String.join(",", columns);
-        }
-
-        String sqlQuery = String.format("SELECT %s FROM curators", columnStr);
-    }
-
     //update
     public void insert(Curator curator) {
         //Подключиться к БД
         //Сделать запрос на добавление
         final String sqlQuery = String.format("INSERT INTO %s (fio) VALUES ('%s')",
                 tableName, curator.getFio());
-        db.executeRequest(sqlQuery);
-    }
-
-    public void update(Curator curator) {
-        //Подключиться к БД
-        //Сделать запрос на изменение
-        final String sqlQuery = String.format("UPDATE %s SET fio= '%s' WHERE id= '%d'",
-                tableName, curator.getFio());
-        db.executeRequest(sqlQuery);
-    }
-
-    //delete
-    public void delete(long id) {
-        //Подключиться к БД
-        //Сделать запрос на удаление
-        final String sqlQuery = String.format("DELETE FROM %s WHERE id= '%d'",
-                tableName, id);
         db.executeRequest(sqlQuery);
     }
 }
