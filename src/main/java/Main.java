@@ -40,10 +40,11 @@ public class Main {
             GroupTable groupTable = new GroupTable();
             ArrayList<Group> groups = groupTable.selectAll();
             if (groups.size() < 3) {
-                groupTable.insert(new Group("OtusFirst", 1));
-                groupTable.insert(new Group("OtusSecond", 2));
-                groupTable.insert(new Group("OtusThird", 3));
+                groupTable.insert(new Group("OTUS1",1 ));
+                groupTable.insert(new Group("OTUS2",2 ));
+                groupTable.insert(new Group("OTUS3",3 ));
                 groups = groupTable.selectAll();
+
             }
 
             CuratorTable curatorTable = new CuratorTable();
@@ -81,9 +82,3 @@ public class Main {
         }
     }
 }
-
-
-//            for (Student tmp : students) {
-//                System.out.println(tmp.toString());
-//                System.out.println("--------------------------------------");
-//            }

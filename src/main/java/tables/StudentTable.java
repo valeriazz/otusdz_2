@@ -53,13 +53,13 @@ public class StudentTable extends AbsTable {
     }
 
     public void selectAllStudentsWithGroupNameAndCuratorName() throws SQLException {
-        String sqlQuery = String.format("SELECT students.id, students.fio, students.sex, students.id_group, groups.name, " +
+        String sqlQuery = String.format("SELECT students.id, students.fio, students.sex, students.id_group, groups_t.name, " +
                 "curators.fio" +
-                " FROM students LEFT JOIN groups ON groups.id = students.id_group LEFT JOIN curators ON " +
-                "curators.id = groups.id_curator");
+                " FROM students LEFT JOIN groups_t ON groups_t.id = students.id_group LEFT JOIN curators ON " +
+                "curators.id = groups_t.id_curator");
         ResultSet rs = db.executeRequestWithAnswer(sqlQuery);
         while (rs.next()) {
-            System.out.println("Информация обо всех студентах, включая название группы и имя куратора: " +
+            System.out.println("Информация о студенте: " +
                     rs.getString(1) + "|" +
                     rs.getString(2) + "|" +
                     rs.getString(3) + "|" +
@@ -91,10 +91,10 @@ public class StudentTable extends AbsTable {
 
     public void selectAllStudentsFromOneGroup () throws SQLException {
         String sqlQuery = String.format("SELECT students.fio, students.id, students.sex, students.id_group FROM students" +
-                " LEFT JOIN groups ON students.id_group = groups.id WHERE groups.name = 'OtusFirst'");
+                " LEFT JOIN groups_t ON students.id_group = groups_t.id WHERE groups_t.name = 'OTUS1'");
         ResultSet rs = db.executeRequestWithAnswer(sqlQuery);
         while (rs.next()) {
-            System.out.println("Студенты, относящиеся только к группе OtusFirst: " +
+            System.out.println("Студенты, относящиеся только к группе OTUS1: " +
                     rs.getString(1) + "|" +
                     rs.getString(2) + "|" +
                     rs.getString(3) + "|" +
